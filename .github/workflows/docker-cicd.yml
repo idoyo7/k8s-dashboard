@@ -30,17 +30,29 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::6}" >> $GITHUB_ENV
 
-      - name: Build and push Docker image
+      - name: Build and push Dashboard image
         id: build-push
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64
-          # platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/k8s-dashboard:${{ env.SHORT_SHA }}
             ${{ secrets.DOCKER_USERNAME }}/k8s-dashboard:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push Steampipe image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./deploy
+          file: ./deploy/steampipe.Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/steampipe-k8s:${{ env.SHORT_SHA }}
+            ${{ secrets.DOCKER_USERNAME }}/steampipe-k8s:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -57,6 +69,9 @@ jobs:
         run: |
           cd montstrap-manifest
           sed -i 's|image:.*k8s-dashboard.*|image: ${{ secrets.DOCKER_USERNAME }}/k8s-dashboard:${{ env.SHORT_SHA }}|' prod/k8s-dashboard/manifests/deployment.yaml
+          sed -i 's|image:.*k8s-dashboard.*|image: ${{ secrets.DOCKER_USERNAME }}/k8s-dashboard:${{ env.SHORT_SHA }}|' stage/k8s-dashboard/manifests/deployment.yaml
+          sed -i 's|image:.*steampipe.*|image: ${{ secrets.DOCKER_USERNAME }}/steampipe-k8s:${{ env.SHORT_SHA }}|' prod/k8s-dashboard/manifests/deployment.yaml
+          sed -i 's|image:.*steampipe.*|image: ${{ secrets.DOCKER_USERNAME }}/steampipe-k8s:${{ env.SHORT_SHA }}|' stage/k8s-dashboard/manifests/deployment.yaml
 
       - name: Commit and push changes to 'montstrap-manifest'
         if: success()
@@ -65,5 +80,6 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add prod/k8s-dashboard/manifests/deployment.yaml
+          git add stage/k8s-dashboard/manifests/deployment.yaml
           git diff --cached --quiet || git commit -m "Update k8s-dashboard image tag to ${{ env.SHORT_SHA }}"
           git push
