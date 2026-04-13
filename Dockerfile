@@ -1,16 +1,11 @@
 # NOTE: Next.js standalone output requires `output: 'standalone'` in next.config.mjs.
 # That config change is handled separately — do not modify next.config.mjs here.
 
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm ci --only=production
-
-# Stage 2: Build
+# Stage 1: Build (needs devDependencies for TypeScript/ESLint)
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY package.json package-lock.json* ./
+RUN npm ci
 COPY . .
 RUN npm run build
 
