@@ -68,12 +68,12 @@ jobs:
         if: success()
         run: |
           cd montstrap-manifest
-          # stage: kustomization newTag(태그 전용)만 yq bump — deployment.yaml(사람 편집)은 안 건드림
-          yq eval -i "(.images[] | select(.name == \"${{ secrets.DOCKER_USERNAME }}/k8s-dashboard\")).newTag = strenv(SHORT_SHA)" stage/k8s-dashboard/manifests/kustomization.yaml
-          yq eval -i "(.images[] | select(.name == \"${{ secrets.DOCKER_USERNAME }}/steampipe-k8s\")).newTag = strenv(SHORT_SHA)" stage/k8s-dashboard/manifests/kustomization.yaml
-          # prod: kustomize 미이관(plain apply) → 기존 sed 유지(후속 티켓)
-          sed -i 's|image:.*k8s-dashboard.*|image: ${{ secrets.DOCKER_USERNAME }}/k8s-dashboard:${{ env.SHORT_SHA }}|' prod/k8s-dashboard/manifests/deployment.yaml
-          sed -i 's|image:.*steampipe.*|image: ${{ secrets.DOCKER_USERNAME }}/steampipe-k8s:${{ env.SHORT_SHA }}|' prod/k8s-dashboard/manifests/deployment.yaml
+          # hub: kustomization newTag(태그 전용)만 yq bump — deployment.yaml(사람 편집)은 안 건드림
+          yq eval -i "(.images[] | select(.name == \"${{ secrets.DOCKER_USERNAME }}/k8s-dashboard\")).newTag = strenv(SHORT_SHA)" hub/k8s-dashboard/manifests/kustomization.yaml
+          yq eval -i "(.images[] | select(.name == \"${{ secrets.DOCKER_USERNAME }}/steampipe-k8s\")).newTag = strenv(SHORT_SHA)" hub/k8s-dashboard/manifests/kustomization.yaml
+          # edge: kustomize 미이관(plain apply) → 기존 sed 유지(후속 티켓)
+          sed -i 's|image:.*k8s-dashboard.*|image: ${{ secrets.DOCKER_USERNAME }}/k8s-dashboard:${{ env.SHORT_SHA }}|' edge/k8s-dashboard/manifests/deployment.yaml
+          sed -i 's|image:.*steampipe.*|image: ${{ secrets.DOCKER_USERNAME }}/steampipe-k8s:${{ env.SHORT_SHA }}|' edge/k8s-dashboard/manifests/deployment.yaml
 
       - name: Commit and push changes to 'montstrap-manifest'
         if: success()
@@ -81,8 +81,8 @@ jobs:
           cd montstrap-manifest
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add prod/k8s-dashboard/manifests/deployment.yaml
-          git add stage/k8s-dashboard/manifests/kustomization.yaml
+          git add edge/k8s-dashboard/manifests/deployment.yaml
+          git add hub/k8s-dashboard/manifests/kustomization.yaml
           git diff --cached --quiet || git commit -m "Update k8s-dashboard image tag to ${{ env.SHORT_SHA }}"
           for i in 1 2 3; do
             git push && exit 0
