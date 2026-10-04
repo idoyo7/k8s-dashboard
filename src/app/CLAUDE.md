@@ -65,7 +65,6 @@ Next.js 14 App Router 페이지 및 API 라우트. 각 하위 디렉토리는 �
 
 | API | 설명 |
 |-----|------|
-| `api/ai/route.ts` | AI 라우팅 (10 routes, 멀티 라우트, SSE, 도구 추론, 토큰 추적) |
 | `api/steampipe/route.ts` | Steampipe 쿼리 + Cost 가용성 + 인벤토리 |
 | `api/auth/route.ts` | 로그아웃 — HttpOnly 쿠키 서버 사이드 삭제 |
 | `api/msk/route.ts` | MSK 브로커 노드 + CloudWatch 메트릭 |
@@ -158,7 +157,6 @@ Next.js 14 App Router pages and API routes. Each subdirectory is a route segment
 
 | API | Description |
 |-----|------------|
-| `api/ai/route.ts` | AI routing (10 routes, multi-route, SSE, tool inference, token tracking) |
 | `api/steampipe/route.ts` | Steampipe queries + Cost availability + Inventory |
 | `api/auth/route.ts` | Logout — server-side HttpOnly cookie deletion |
 | `api/msk/route.ts` | MSK broker nodes + CloudWatch metrics |

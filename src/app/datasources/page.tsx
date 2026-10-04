@@ -8,9 +8,8 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import {
   Database, Activity, FileText, Waypoints, Plus, Trash2, Edit3,
   Check, X, RefreshCw, TestTube, Shield, CheckCircle, XCircle, Settings, Lock,
-  Radar, Gauge, Dog, Globe, Info, Stethoscope,
+  Radar, Gauge, Dog, Globe, Info,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 // --- Types / 타입 ---
 
@@ -123,7 +122,6 @@ function emptyForm(): Omit<DatasourceEntry, 'id' | 'createdAt' | 'updatedAt'> {
 
 export default function DatasourcesPage() {
   const { t } = useLanguage();
-  const router = useRouter();
 
   // --- State ---
   const [datasources, setDatasources] = useState<DatasourceEntry[]>([]);
@@ -445,17 +443,6 @@ export default function DatasourcesPage() {
           label: t('datasources.actions') !== 'datasources.actions' ? t('datasources.actions') : 'Actions',
           render: (_: any, row: DatasourceEntry) => (
             <div className="flex items-center gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const msg = encodeURIComponent(`${row.name} (${row.url}) 연결을 진단해줘`);
-                  router.push(`/awsops/ai?message=${msg}`);
-                }}
-                className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 transition-colors"
-                title={t('datasources.diagnose') !== 'datasources.diagnose' ? t('datasources.diagnose') : 'Diagnose'}
-              >
-                <Stethoscope size={12} />
-              </button>
               <button
                 onClick={(e) => { e.stopPropagation(); openEditPanel(row); }}
                 className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors"
