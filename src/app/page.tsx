@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import StatsCard from '@/components/dashboard/StatsCard';
 import PieChartCard from '@/components/charts/PieChartCard';
@@ -18,12 +18,11 @@ interface DashboardData {
 
 // Clickable card wrapper
 function CardLink({ href, children, className = '' }: { href: string; children: React.ReactNode; className?: string }) {
-  const router = useRouter();
   return (
-    <div onClick={() => router.push(href)}
-      className={`cursor-pointer transition-all hover:scale-[1.02] hover:border-accent-cyan/30 ${className}`}>
+    <Link href={href}
+      className={`block cursor-pointer transition-all hover:scale-[1.02] hover:border-accent-cyan/30 ${className}`}>
       {children}
-    </div>
+    </Link>
   );
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import DataTable from '@/components/table/DataTable';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -415,13 +416,13 @@ export default function DatasourceExplorePage() {
             <p className="text-gray-400 mb-6">
               {t('datasources.noConfiguredDesc')}
             </p>
-            <a
-              href="/awsops/datasources"
+            <Link
+              href="/datasources"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30 hover:bg-accent-cyan/20 transition-colors"
             >
               <Database size={16} />
               {t('datasources.goToManagement')}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

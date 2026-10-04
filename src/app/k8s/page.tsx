@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import StatsCard from '@/components/dashboard/StatsCard';
 import PieChartCard from '@/components/charts/PieChartCard';
@@ -137,11 +138,11 @@ export default function K8sOverviewPage() {
   })), [deployments]);
 
   const quickLinks = [
-    { label: t('k8s.pods'), href: '/awsops/k8s/pods', icon: Box, color: 'text-accent-green' },
-    { label: t('k8s.nodes'), href: '/awsops/k8s/nodes', icon: Server, color: 'text-accent-cyan' },
-    { label: t('k8s.deployments'), href: '/awsops/k8s/deployments', icon: Rocket, color: 'text-accent-purple' },
-    { label: t('k8s.services'), href: '/awsops/k8s/services', icon: Network, color: 'text-accent-orange' },
-    { label: 'Explorer', href: '/awsops/k8s/explorer', icon: ExternalLink, color: 'text-accent-cyan' },
+    { label: t('k8s.pods'), href: '/k8s/pods', icon: Box, color: 'text-accent-green' },
+    { label: t('k8s.nodes'), href: '/k8s/nodes', icon: Server, color: 'text-accent-cyan' },
+    { label: t('k8s.deployments'), href: '/k8s/deployments', icon: Rocket, color: 'text-accent-purple' },
+    { label: t('k8s.services'), href: '/k8s/services', icon: Network, color: 'text-accent-orange' },
+    { label: 'Explorer', href: '/k8s/explorer', icon: ExternalLink, color: 'text-accent-cyan' },
   ];
 
   return (
@@ -337,14 +338,14 @@ export default function K8sOverviewPage() {
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Quick Links</h2>
           <div className="flex flex-wrap gap-3">
             {quickLinks.map(({ label, href, icon: Icon, color }) => (
-              <a
+              <Link
                 key={href}
                 href={href}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-navy-800 border border-navy-600 hover:border-accent-cyan/40 transition-colors text-sm text-gray-300 hover:text-white"
               >
                 <Icon size={15} className={color} />
                 {label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
