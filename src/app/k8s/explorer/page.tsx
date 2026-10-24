@@ -332,7 +332,13 @@ export default function K8sExplorerPage() {
   const totalPages = Math.max(1, Math.ceil(filteredResources.length / pageSize));
   const paginatedResources = filteredResources.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   // Reset page when filters change / 필터 변경 시 페이지 리셋
-  useMemo(() => { setCurrentPage(1); }, [clusterFilter, selectedNamespace, statusFilter, nodeFilter, searchText]);
+  // 렌더 중 상태 보정 패턴(React 권장): 필터 키가 바뀐 렌더에서 즉시 1페이지로
+  const filterKey = JSON.stringify([clusterFilter, selectedNamespace, statusFilter, nodeFilter, searchText]);
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (prevFilterKey !== filterKey) {
+    setPrevFilterKey(filterKey);
+    setCurrentPage(1);
+  }
 
   const handleRowSelect = async (row: any, index: number) => {
     if (selectedRow === index) {
